@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stock Sold - Details</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .details-wrap { max-width: 1000px; margin: 20px auto; }
+  table.details {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #b9cfe6;
+    font-size: 14px;
+  }
+  table.details th {
+    background: #eaf2fb;
+    color: #1f5fa8;
+    border: 1px solid #d3e2f2;
+    padding: 10px 8px;
+    text-align: left;
+  }
+  table.details td {
+    border: 1px solid #e3ecf7;
+    padding: 8px;
+  }
+  table.details td.num { text-align: right; }
+  .summary-line {
+    background: #fff;
+    border: 1px solid #b9cfe6;
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-weight: 600;
+    color: #1f5fa8;
+  }
+  .empty-msg { padding: 20px; text-align: center; color: #6a86a8; }
+</style>
+</head>
+<body>
+
+<div class="window details-wrap">
+  <div class="titlebar">
+    <span>📦 Stock Sold - Details for <span id="dateLabel"></span></span>
+    <button class="close-btn" title="Close" onclick="window.close();">✕</button>
+  </div>
+
+  <div style="padding:14px;">
+    <div class="summary-line">
+      <span>Total Items Sold: <span id="totalQty">0</span></span>
+      <span>Total Sales: <span id="totalSales">₹0.00</span></span>
+    </div>
+
+    <table class="details">
+      <thead>
+        <tr>
+          <th>Invoice No.</th>
+          <th>Item ID/SKU</th>
+          <th>Item name</th>
+          <th style="text-align:right;">Qty</th>
+          <th style="text-align:right;">Price</th>
+          <th style="text-align:right;">Line Total</th>
+        </tr>
+      </thead>
+      <tbody id="itemsBody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty-msg" style="display:none;">No items sold on this date yet.</div>
+  </div>
+</div>
+
+<script>
+const API_BASE = '/api';
+
+function fmt(n) { return '₹' + Number(n || 0).toFixed(2); }
+
+function getDateParam() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('date') || new Date().toISOString().split('T')[0];
+}
+
+async function loadItems() {
+  const date = getDateParam();
+  document.getElementById('dateLabel').textContent = date;
+
+  try {
+    const res = await fetch(API_BASE + '/daily-summary/' + date + '/items');
+    if (!res.ok) throw new Error('Server error');
+    const items = await res.json();
+
+    const body = document.getElementById('itemsBody');
+    body.innerHTML = '';
+
+    if (!items.length) {
+      document.getElementById('emptyMsg').style.display = 'block';
+      return;
+    }
+
+    let totalQty = 0;
+    let totalSales = 0;
+
+    items.forEach((item) => {
+      totalQty += item.qty;
+      totalSales += parseFloat(item.line_total);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + item.invoice_no + '</td>' +
+        '<td>' + item.sku + '</td>' +
+        '<td>' + item.item_name + '</td>' +
+        '<td class="num">' + item.qty + '</td>' +
+        '<td class="num">' + fmt(item.price) + '</td>' +
+        '<td class="num">' + fmt(item.line_total) + '</td>';
+      body.appendChild(tr);
+    });
+
+    document.getElementById('totalQty').textContent = totalQty;
+    document.getElementById('totalSales').textContent = fmt(totalSales);
+  } catch (err) {
+    document.getElementById('emptyMsg').style.display = 'block';
+    document.getElementById('emptyMsg').textContent =
+      'Could not reach backend server. Make sure the Flask server is running';
+  }
+}
+
+loadItems();
+</script>
+
+</body>
+</html>

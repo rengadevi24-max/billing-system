@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login - Billing System</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .auth-window {
+    max-width: 420px;
+    width: 100%;
+  }
+  .auth-tabs {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding: 12px 16px;
+    background: #eaf2fb;
+    border-bottom: 1px solid #b9cfe6;
+  }
+  .auth-tabs a {
+    color: #1f5fa8;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .auth-tabs a.active { text-decoration: underline; }
+  .auth-body { padding: 24px; }
+  .auth-body h2 {
+    color: #1f5fa8;
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 18px;
+  }
+  .auth-body label {
+    font-size: 13px;
+    color: #1f5fa8;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .auth-body .field { margin-bottom: 14px; }
+  .auth-error {
+    background: #fdecea;
+    border: 1px solid #f5c2c0;
+    color: #c0392b;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .auth-submit {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(#3f8fd8, #1f5fa8);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .auth-submit:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+
+<div class="window auth-window">
+  <div class="titlebar">
+    <span>📄 <input class="name-edit" id="storeNameDisplay" value="Rengadevi Departmental Store"></span>
+  </div>
+
+  <div class="auth-tabs">
+    <a href="register.html">Register</a>
+    <a href="login.html" class="active">Login</a>
+  </div>
+
+  <div class="auth-body">
+    <h2>Login</h2>
+    <div class="auth-error" id="errorBox"></div>
+
+    <div class="field">
+      <label>ID</label>
+      <input class="field" id="username" placeholder="Enter your ID">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input class="field" id="password" type="password" placeholder="Enter your password">
+    </div>
+
+    <button class="auth-submit" onclick="doLogin()">Login</button>
+
+    <p style="text-align:center; margin-top:16px; font-size:13px; color:#1f5fa8;">
+      Don't have an account? <a href="register.html" style="color:#1f5fa8;">Register here</a>
+    </p>
+  </div>
+</div>
+
+<script>
+const API_BASE = '/api';
+
+async function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const errorBox = document.getElementById('errorBox');
+  errorBox.style.display = 'none';
+
+  if (!username || !password) {
+    errorBox.textContent = 'Please enter both ID and password.';
+    errorBox.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + '/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username: username, password: password }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      errorBox.textContent = data.error || 'Login failed.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    window.location.href = 'index.html';
+  } catch (err) {
+    errorBox.textContent = 'Could not reach backend server. Make sure the Flask server is running';
+    errorBox.style.display = 'block';
+  }
+}
+
+document.getElementById('password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+
+</body>
+</html>>

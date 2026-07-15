@@ -1,0 +1,301 @@
+* { box-sizing: border-box; }
+body {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  background: #dfe9f2;
+  margin: 0;
+  padding: 20px;
+}
+.window {
+  max-width: 1500px;
+  margin: 0 auto;
+  background: #eaf2fb;
+  border: 2px solid #2f6fb0;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+.titlebar {
+  background: linear-gradient(#3f8fd8, #1f5fa8);
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.titlebar .name-edit {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-family: inherit;
+  outline: none;
+  border-bottom: 1px dashed rgba(255,255,255,0.5);
+  width: 260px;
+}
+.titlebar .close-btn {
+  background: #d9432b;
+  border: 1px solid #a92c1a;
+  color: #fff;
+  width: 26px; height: 26px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 14px;
+}
+.panel {
+  background: #fff;
+  border: 1px solid #b9cfe6;
+  border-radius: 6px;
+  padding: 10px;
+}
+.panel h3 {
+  margin: 0 0 8px 0;
+  color: #1f5fa8;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn {
+  background: linear-gradient(#fdfdfd, #e4ecf5);
+  border: 1px solid #9db6d4;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #1f5fa8;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:hover { background: #dcebfb; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.field {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #b9cfe6;
+  border-radius: 3px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+textarea.field { resize: vertical; min-height: 70px; font-family: inherit; }
+.id-line { font-size: 12px; color: #1f5fa8; margin-bottom: 6px; }
+
+.invoice-panel h3 { justify-content: flex-start; font-size: 20px; color: #1f5fa8; }
+.invoice-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.invoice-row label { font-size: 13px; color: #1f5fa8; font-weight: 600; }
+
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px 10px 14px;
+}
+.email-row label { color: #1f5fa8; font-weight: 600; font-size: 13px; white-space: nowrap; }
+.email-row .field { margin-bottom: 0; }
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  flex-wrap: wrap;
+}
+.toolbar .count {
+  background: #fff;
+  border: 1px solid #b9cfe6;
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: #1f5fa8;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+table.items {
+  width: calc(100% - 28px);
+  margin: 0 14px;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #b9cfe6;
+  font-size: 13px;
+}
+table.items th {
+  background: #eaf2fb;
+  color: #1f5fa8;
+  border: 1px solid #d3e2f2;
+  padding: 8px 6px;
+  text-align: left;
+}
+table.items td {
+  border: 1px solid #e3ecf7;
+  padding: 4px 6px;
+}
+table.items tr.selected td { background: #cfe4fb; }
+table.items input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  padding: 4px 2px;
+}
+table.items input:focus { background: #fff9d6; outline: 1px solid #f0d060; }
+table.items td.num { text-align: right; }
+table.items td.line-total { text-align: right; font-weight: 600; color: #1f5fa8; }
+table.items td.row-num { width: 26px; text-align: center; color: #6a86a8; background: #f4f8fc; }
+
+.tabs-and-totals {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  padding: 14px;
+}
+.tabs {
+  background: #fff;
+  border: 1px solid #b9cfe6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.tab-heads {
+  display: flex;
+  flex-wrap: wrap;
+  background: #eaf2fb;
+  border-bottom: 1px solid #b9cfe6;
+}
+.tab-heads button {
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #1f5fa8;
+}
+.tab-heads button.active {
+  background: #fff;
+  font-weight: 700;
+  border-bottom: 2px solid #1f5fa8;
+}
+.tab-body { padding: 14px; min-height: 220px; }
+.tab-body .status-row { display: flex; gap: 24px; margin-bottom: 14px; flex-wrap: wrap; }
+.tab-body .status-row div { flex: 1; min-width: 160px; }
+.tab-body label { font-size: 13px; color: #1f5fa8; font-weight: 600; display: block; margin-bottom: 4px; }
+.tab-body .actions { display: flex; gap: 10px; margin-top: 10px; }
+.tab-body textarea { width: 100%; min-height: 160px; }
+
+.totals {
+  background: #fff;
+  border: 1px solid #b9cfe6;
+  border-radius: 6px;
+  padding: 14px;
+}
+.totals .row {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.totals .row label { font-size: 13px; color: #1f5fa8; font-weight: 600; }
+.totals .row.pct-row { grid-template-columns: 1fr 70px 26px; }
+.totals input, .totals select {
+  padding: 6px 8px;
+  border: 1px solid #b9cfe6;
+  border-radius: 3px;
+  font-size: 13px;
+  text-align: right;
+}
+.totals .readout {
+  background: #f5efd8;
+  border: 1px solid #e0d6a8;
+  padding: 6px 8px;
+  border-radius: 3px;
+  text-align: right;
+  font-weight: 600;
+}
+.totals .big { font-size: 15px; }
+.totals .due { color: #c0392b; font-size: 16px; font-weight: 700; }
+
+.bottom-bar {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  border-top: 1px solid #b9cfe6;
+  background: #eaf2fb;
+  flex-wrap: wrap;
+}
+.bottom-bar .btn { padding: 8px 16px; font-size: 13px; }
+.bottom-bar .save { border-color: #4caf50; color: #2e7d32; }
+.bottom-bar .close-b { border-color: #d9432b; color: #c0392b; }
+
+@media (max-width: 950px) {
+  .top-row { grid-template-columns: 1fr; }
+  .tabs-and-totals { grid-template-columns: 1fr; }
+}
+
+/* ============ PRINT STYLES ============ */
+/* Receipt-style printout: Shop name -> Items table -> Total + Sign.
+   Everything else (Sold to, Ship to, Invoice info, tabs, totals
+   breakdown, buttons) is hidden while printing. */
+
+.print-only { display: none; }
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .window { border: none; box-shadow: none; max-width: 100%; }
+
+  .print-only { display: block; }
+
+  .print-header {
+    text-align: center;
+    padding: 10px 0 16px 0;
+    border-bottom: 2px solid #000;
+    margin-bottom: 10px;
+  }
+  .print-header h1 {
+    font-size: 22px;
+    margin: 0;
+    color: #000;
+  }
+
+  .print-footer {
+    padding: 14px 0;
+    border-top: 2px solid #000;
+    margin-top: 6px;
+  }
+  .print-footer p {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 8px 0;
+    color: #000;
+  }
+  .print-footer .sign-line { margin-top: 30px; }
+
+  /* Hide everything except the print header, items table, and print footer */
+  .titlebar,
+  .top-row,
+  .email-row,
+  .toolbar,
+  .bottom-bar,
+  .tabs-and-totals { display: none !important; }
+
+  table.items {
+    width: 100%;
+    margin: 0;
+    border: 1px solid #000;
+  }
+  table.items th, table.items td { border-color: #000; }
+  table.items input { pointer-events: none; border: none !important; background: transparent !important; }
+  .row-num { background: transparent !important; }
+}

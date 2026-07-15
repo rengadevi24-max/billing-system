@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit INVOICE - Departmental Store Billing</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="window">
+  <div class="titlebar">
+    <span>📄 Edit INVOICE &nbsp;- &nbsp;Company:
+      <input class="name-edit" id="companyName" value="Rengadevi Departmental Store">
+    </span>
+    <button class="close-btn" title="Close" onclick="if(confirm('Close invoice?')) window.close();">✕</button>
+  </div>
+
+  <div style="text-align:right; padding:6px 14px 0 14px;">
+    <button class="btn" onclick="doLogout()">🚪 Logout</button>
+  </div>
+
+  <div class="print-only print-header">
+    <h1 id="printShopName">Rengadevi Departmental Store</h1>
+  </div>
+
+  <div class="top-row">
+    <div class="panel">
+      <h3>Sold to <span class="id-line" id="soldId">00000001</span>
+        <button class="btn" onclick="selectCustomer()">👤 Select Customer</button>
+      </h3>
+      <input class="field" id="soldName" placeholder="Customer name" oninput="syncShipTo()">
+      <textarea class="field" id="soldAddress" placeholder="Customer address" oninput="syncShipTo()"></textarea>
+    </div>
+
+    <div class="panel">
+      <h3>Ship to
+        <label style="font-size:12px;font-weight:400;color:#1f5fa8;">
+          <input type="checkbox" id="sameAsSold" checked onchange="syncShipTo()"> Same as "Sold to"
+        </label>
+      </h3>
+      <input class="field" id="shipName" placeholder="Customer name" disabled>
+      <textarea class="field" id="shipAddress" placeholder="Customer address" disabled></textarea>
+    </div>
+
+    <div class="panel invoice-panel">
+      <h3>INVOICE</h3>
+      <div class="invoice-row"><label>Invoice No.</label><input class="field" id="invoiceNo" value="INV0000001"></div>
+      <div class="invoice-row"><label>Date</label><input class="field" id="invDate" type="date"></div>
+      <div class="invoice-row"><label>Terms</label>
+        <select class="field" id="terms">
+          <option>NET 10</option><option>NET 15</option><option>NET 30</option><option>Due on Receipt</option>
+        </select>
+      </div>
+      <div class="invoice-row"><label>Due Date</label><input class="field" id="dueDate" type="date"></div>
+      <div class="invoice-row"><label>Order</label><input class="field" id="orderNo" placeholder="Order / tracking no."></div>
+      <div class="invoice-row"><label>Sales Rep.</label><input class="field" id="salesRep"></div>
+      <div class="invoice-row"><label>Tracking</label><input class="field" id="tracking" placeholder="Status: Pending"></div>
+    </div>
+  </div>
+
+  <div class="email-row">
+    <label>Customer Email address</label>
+    <input class="field" id="custEmail" placeholder="customer@example.com" style="max-width:340px;">
+    <button class="btn" onclick="openCalculator()">🧮 Calculator</button>
+  </div>
+
+  <div class="toolbar">
+    <span class="count">Line count: <span id="lineCount">3</span></span>
+    <button class="btn" onclick="addLine()">➕ Add new line</button>
+    <button class="btn" onclick="addItemFromList()">➕ Add item from list</button>
+    <button class="btn" onclick="editSelected()">✏️ Edit selected line</button>
+    <button class="btn" onclick="deleteLine()">🗑️ Delete line</button>
+  </div>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th style="width:26px;"></th>
+        <th style="width:130px;">Item ID/SKU</th>
+        <th>Item name - description</th>
+        <th style="width:80px;">Qty</th>
+        <th style="width:110px;">Item price</th>
+        <th style="width:120px;">Line total</th>
+      </tr>
+    </thead>
+    <tbody id="itemsBody"></tbody>
+  </table>
+
+  <div class="print-only print-footer">
+    <p>Total Amount: <span id="printTotalAmount">₹0.00</span></p>
+    <p class="sign-line">Sign: ________</p>
+  </div>
+
+  <div class="tabs-and-totals">
+    <div class="tabs">
+      <div class="tab-heads" id="tabHeads">
+        <button class="active" data-tab="status">Status</button>
+        <button data-tab="comments">Comments</button>
+        <button data-tab="private">Private comments</button>
+        <button data-tab="terms">Terms &amp; Conditions</button>
+        <button data-tab="footer">Footer text</button>
+        <button data-tab="recurring">Recurring</button>
+      </div>
+      <div class="tab-body">
+        <div id="tab-status">
+          <div class="status-row">
+            <div><label>Printed</label><input class="field" id="printedDate" type="date"></div>
+            <div><label>Emailed</label><input class="field" id="emailedDate" type="date"></div>
+          </div>
+          <div><label>Template</label>
+            <select class="field" id="templateSelect" style="max-width:260px;">
+              <option>Simplified 2 / Left logo</option>
+              <option>Classic</option>
+              <option>Modern</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button class="btn" onclick="markPaid()">✅ Mark as "PAID"</button>
+            <button class="btn" onclick="editPayments()">💳 Edit payments</button>
+          </div>
+        </div>
+        <div id="tab-comments" style="display:none;"><textarea class="field" id="commentsText" placeholder="Comments visible on invoice..."></textarea></div>
+        <div id="tab-private" style="display:none;"><textarea class="field" id="privateCommentsText" placeholder="Private comments (not printed)..."></textarea></div>
+        <div id="tab-terms" style="display:none;"><textarea class="field" id="termsConditionsText" placeholder="Terms & Conditions...">Payment due within the terms stated above.</textarea></div>
+        <div id="tab-footer" style="display:none;"><textarea class="field" id="footerText" placeholder="Footer text...">Thank you for your business!</textarea></div>
+        <div id="tab-recurring" style="display:none;">
+          <label><input type="checkbox" id="isRecurring"> Make this a recurring invoice</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="totals">
+      <div class="row pct-row">
+        <label>Discount on total</label>
+        <input id="discount" type="number" value="0" min="0" max="100" step="0.01" oninput="calcTotals()">
+        <span>%</span>
+      </div>
+      <div class="row"><label>Sub total</label><div class="readout" id="subTotal">₹0.00</div></div>
+      <div class="row"><label>Tax %</label><input id="taxRate" type="number" value="10" min="0" step="0.01" oninput="calcTotals()"></div>
+      <div class="row"><label>Delivery costs</label><input id="delivery" type="number" value="0" min="0" step="0.01" oninput="calcTotals()"></div>
+      <div class="row big"><label>Invoice Total</label><div class="readout" id="invoiceTotal">₹0.00</div></div>
+      <div class="row"><label>Payments</label><input id="payments" type="number" value="0" min="0" step="0.01" oninput="calcTotals()"></div>
+      <div class="row due"><label>Amount Due</label><div class="readout" id="amountDue">₹0.00</div></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin: 0 14px 14px 14px;">
+    <h3>Today's Sales Summary</h3>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+      <div style="flex:1; min-width:150px;">
+        <label style="font-size:13px; color:#1f5fa8; font-weight:600; display:block; margin-bottom:4px;">Total Sales (Today)</label>
+        <div class="readout" id="summaryTotalSales" style="background:#f5efd8; border:1px solid #e0d6a8; padding:8px; border-radius:3px; text-align:right; font-weight:600;">₹0.00</div>
+      </div>
+      <div style="flex:1; min-width:150px;">
+        <label style="font-size:13px; color:#1f5fa8; font-weight:600; display:block; margin-bottom:4px;">Stock Sold (Today)</label>
+        <div class="readout" id="summaryStockSold" onclick="openStockDetails()" style="background:#f5efd8; border:1px solid #e0d6a8; padding:8px; border-radius:3px; text-align:right; font-weight:600; cursor:pointer; text-decoration:underline;" title="Click to see what was sold today">0</div>
+      </div>
+      <div style="flex:1; min-width:150px;">
+        <label style="font-size:13px; color:#1f5fa8; font-weight:600; display:block; margin-bottom:4px;">Stock to Reorder</label>
+        <input class="field" id="summaryStockReorder" type="number" min="0" step="1" style="margin-bottom:0; text-align:right;" value="0">
+      </div>
+      <button class="btn" onclick="saveStockReorder()" style="height:38px;">💾 Save Reorder Qty</button>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="btn save" onclick="saveClose()">✅ Save &amp; Close</button>
+    <button class="btn" onclick="previewInvoice()">🔍 Preview</button>
+    <button class="btn" onclick="window.print()">🖨️ Print</button>
+    <button class="btn" onclick="emailInvoice()">✉️ Email</button>
+    <button class="btn close-b" onclick="if(confirm('Close invoice?')) window.close();">✖️ Close</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
