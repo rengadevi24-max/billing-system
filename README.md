@@ -64,11 +64,6 @@ Run the server
 bash   python app.py
 
 
-Open the app
-Visit http://127.0.0.1:5000 — you'll be redirected to the login/register page. Create an account and you're in! 🎉
-
-
-
 🔒 Security Note
 
 backend/config.py is excluded from version control via .gitignore since it holds your database password and secret key. Never commit real credentials — always work off config.example.py.
